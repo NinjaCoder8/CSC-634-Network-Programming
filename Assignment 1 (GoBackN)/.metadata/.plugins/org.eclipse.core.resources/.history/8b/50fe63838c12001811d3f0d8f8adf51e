@@ -47,9 +47,8 @@ public class GoBackN {
 					//	congestionFlag = 0;
 					//	congestionTime = -1;
 					//}
-					if(congestionTime != -1 && clock > congestionTime + 2){
-						windowSize = MAX_WINDOW_SIZE;
-						congestionTime = -1;
+					if(clock > congestionTime + 2){
+						
 					}
 				}
 				
@@ -72,7 +71,6 @@ public class GoBackN {
 	}
 
 	private static boolean receivePacket(int[] dataSent) {
-		//receiver accepts one packet at time with a probability to loose packet 
 		float x = random.nextFloat();
 		float range = 0;
 		range = (float) ((congestionFlag > 2) ? 0.1 : 0.6);

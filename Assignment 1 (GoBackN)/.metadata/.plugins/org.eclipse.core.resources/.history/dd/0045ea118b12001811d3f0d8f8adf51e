@@ -10,7 +10,6 @@ public class GoBackN {
 	static int currentPckt;
 	static int clock;
 	static int congestionFlag;
-	static int congestionTime;
 	
 	public static void main(String[] args){
 		random = new Random();
@@ -23,7 +22,6 @@ public class GoBackN {
 			currentPckt = 0;
 			congestionFlag =0;
 			windowSize = MAX_WINDOW_SIZE;
-			congestionTime = -1;
 			System.out.println("Packet Generated at clock : " + clock);
 			printPacket(pkt);
 			System.out.println("-------------------------------------------");
@@ -33,24 +31,15 @@ public class GoBackN {
 				if(!ack){ //packet loss (same ack received)
 					System.out.println("Packet Loss at clock: " + clock + " :(");
 					congestionFlag++;
-				}else
+				}else{
 					currentPckt++; //slide the window
+				}
 				
-				if(congestionFlag > 2){ //congestion happened
+				if(congestionFlag > 2){
 					windowSize = (windowSize > 1) ? windowSize/2 : windowSize;
 					congestionFlag = 0;
-					congestionTime = clock;
-					System.out.println("Congestion Heppned at clock: " + clock);
 				}else{
-					//windowSize = (windowSize < MAX_WINDOW_SIZE && (congestionTime != -1 && clock > congestionTime + 2 ) ) ? windowSize*2 : windowSize;
-					//if(clock > congestionTime + 2){
-					//	congestionFlag = 0;
-					//	congestionTime = -1;
-					//}
-					if(congestionTime != -1 && clock > congestionTime + 2){
-						windowSize = MAX_WINDOW_SIZE;
-						congestionTime = -1;
-					}
+					windowSize = (windowSize < MAX_WINDOW_SIZE ) ? windowSize*2 : windowSize;
 				}
 				
 				clock++;
@@ -65,20 +54,20 @@ public class GoBackN {
 	}
 
 	private static void printPacket(int[] pkt) {
-		for(int i = 0; i<pkt.length; i++)
+		for(int i = 0; i<pkt.length; i++){
 			System.out.print(pkt[i] + " ");
+		}
 		System.out.println();
 		
 	}
 
 	private static boolean receivePacket(int[] dataSent) {
-		//receiver accepts one packet at time with a probability to loose packet 
 		float x = random.nextFloat();
 		float range = 0;
 		range = (float) ((congestionFlag > 2) ? 0.1 : 0.6);
-		if(x < range)
+		if(x < range){
 			return false;
-		else{
+		}else{
 			System.out.println("The Following Packet Has Been Received: " + dataSent[0]);
 			return true;
 		}

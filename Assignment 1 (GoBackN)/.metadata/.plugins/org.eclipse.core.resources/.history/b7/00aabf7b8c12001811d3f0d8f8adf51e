@@ -42,13 +42,9 @@ public class GoBackN {
 					congestionTime = clock;
 					System.out.println("Congestion Heppned at clock: " + clock);
 				}else{
-					//windowSize = (windowSize < MAX_WINDOW_SIZE && (congestionTime != -1 && clock > congestionTime + 2 ) ) ? windowSize*2 : windowSize;
-					//if(clock > congestionTime + 2){
-					//	congestionFlag = 0;
-					//	congestionTime = -1;
-					//}
-					if(congestionTime != -1 && clock > congestionTime + 2){
-						windowSize = MAX_WINDOW_SIZE;
+					windowSize = (windowSize < MAX_WINDOW_SIZE && (congestionTime != -1 && clock > congestionTime + 2 ) ) ? windowSize*2 : windowSize;
+					if(clock > congestionTime + 2){
+						congestionFlag = 0;
 						congestionTime = -1;
 					}
 				}
@@ -72,7 +68,6 @@ public class GoBackN {
 	}
 
 	private static boolean receivePacket(int[] dataSent) {
-		//receiver accepts one packet at time with a probability to loose packet 
 		float x = random.nextFloat();
 		float range = 0;
 		range = (float) ((congestionFlag > 2) ? 0.1 : 0.6);
