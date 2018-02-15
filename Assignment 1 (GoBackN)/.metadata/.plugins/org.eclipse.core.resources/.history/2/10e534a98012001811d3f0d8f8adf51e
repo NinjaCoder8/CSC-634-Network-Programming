@@ -1,0 +1,15 @@
+
+public class GoBackN {
+
+	public static void main(String[] args){
+		
+		while(true){
+			String packet = null;
+			sendPacket(packet); //sender 
+			receivePacket(packet); //receiver
+			
+		}
+		
+	}
+	
+}

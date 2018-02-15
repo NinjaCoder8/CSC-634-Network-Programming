@@ -1,0 +1,24 @@
+
+public class GoBackN {
+
+	int packetSize = 12;
+	int windowSize = 6;
+	
+	public static void main(String[] args){
+	
+		while(true){
+			int[] pkt = generateRandomPacket();
+			String packet = null;
+			sendPacket(packet); //sender 
+			receivePacket(packet); //receiver
+			
+		}
+		
+	}
+
+	private static void generateRandomPacket() {
+		
+		
+	}
+	
+}
