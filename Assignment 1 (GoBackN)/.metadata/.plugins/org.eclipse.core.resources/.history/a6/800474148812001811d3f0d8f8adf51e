@@ -2,26 +2,20 @@ import java.util.Random;
 
 public class GoBackN {
 
-	static Random random;
-	static final int MAX_WINDOW_SIZE=6;
 	static int packetSize = 12;
-	
-	static int windowSize;
-	static int currentPckt;
-	static int clock;
-	static int congestionFlag;
+	static int windowSize = 6;
+	static int currentPckt = 0;
+	static Random random;
+	static int clock =0;
 	
 	public static void main(String[] args){
 		random = new Random();
 		int[] pkt;
 		int[] dataSent;
 		boolean ack;
-		clock = 0;
 		while(true){
 			pkt = generateRandomPacket(); //generate random packet forever
 			currentPckt = 0;
-			congestionFlag =0;
-			windowSize = MAX_WINDOW_SIZE;
 			System.out.println("Packet Generated at clock : " + clock);
 			printPacket(pkt);
 			System.out.println("-------------------------------------------");
@@ -30,18 +24,9 @@ public class GoBackN {
 				ack = receivePacket(dataSent); //receiver
 				if(!ack){ //packet loss (same ack received)
 					System.out.println("Packet Loss at clock: " + clock + " :(");
-					congestionFlag++;
 				}else{
 					currentPckt++; //slide the window
 				}
-				
-				if(congestionFlag > 2){
-					windowSize = (windowSize > 1) ? windowSize/2 : windowSize;
-					congestionFlag = 0;
-				}else{
-					windowSize = (windowSize < MAX_WINDOW_SIZE ) ? windowSize+1 : windowSize;
-				}
-				
 				clock++;
 			}
 			System.out.println("-------------------------------------------");
@@ -63,9 +48,7 @@ public class GoBackN {
 
 	private static boolean receivePacket(int[] dataSent) {
 		float x = random.nextFloat();
-		float range = 0;
-		range = (float) ((congestionFlag > 2) ? 0.2 : 0.6);
-		if(x < range){
+		if(x < 0.2){
 			return false;
 		}else{
 			System.out.println("The Following Packet Has Been Received: " + dataSent[0]);

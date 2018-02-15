@@ -33,6 +33,7 @@ public class GoBackN {
 					congestionFlag++;
 				}else{
 					currentPckt++; //slide the window
+					congestionFlag = (congestionFlag > 0) ? congestionFlag-- : congestionFlag;
 				}
 				
 				if(congestionFlag > 2){

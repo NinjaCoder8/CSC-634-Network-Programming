@@ -33,13 +33,13 @@ public class GoBackN {
 					congestionFlag++;
 				}else{
 					currentPckt++; //slide the window
+					congestionFlag = (congestionFlag > 0) ? congestionFlag-- : congestionFlag;
 				}
 				
-				if(congestionFlag > 2){
+				if(congestionFlag > 3){
 					windowSize = (windowSize > 1) ? windowSize/2 : windowSize;
-					congestionFlag = 0;
 				}else{
-					windowSize = (windowSize < MAX_WINDOW_SIZE ) ? windowSize+1 : windowSize;
+					windowSize = (windowSize < MAX_WINDOW_SIZE ) ? windowSize++ : windowSize;
 				}
 				
 				clock++;
