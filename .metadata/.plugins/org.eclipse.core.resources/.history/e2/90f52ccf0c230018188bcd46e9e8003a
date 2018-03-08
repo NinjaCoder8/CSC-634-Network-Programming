@@ -25,6 +25,7 @@ public class Server
             //Server is running always. This is done using this while(true) loop
             while(true)
             {
+            	System.out.println("hehe");
                 //Reading the message from the client
                 socket = serverSocket.accept();
                 InputStream is = socket.getInputStream();
@@ -40,8 +41,9 @@ public class Server
                 String fileID = request.substring(76,80) ;
                 String offset = request.substring(80,84) ;
                 String filename = request.substring(84, request.length()) ;
-
+                System.out.println(filename);
                 filename = convertBinaryStringToString(filename);
+                System.out.println(filename);
                 FileReader fr = new FileReader(filename);
                 BufferedReader br1 = new BufferedReader(fr);
                 
@@ -65,7 +67,8 @@ public class Server
                 	
                 	if(read)
                 		returnMessage += var;
-                	count++;
+                	
+                	System.out.println(Integer.parseInt(offset));
                 }
                 
                 OutputStream os = socket.getOutputStream();

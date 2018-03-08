@@ -25,6 +25,7 @@ public class Server
             //Server is running always. This is done using this while(true) loop
             while(true)
             {
+            	System.out.println("hehe");
                 //Reading the message from the client
                 socket = serverSocket.accept();
                 InputStream is = socket.getInputStream();
@@ -36,48 +37,49 @@ public class Server
 
                 String version = request.charAt(0) + "";
                 String opcode = request.charAt(1) + "";
-                String oldChecksum = request.substring(2,76) ;
-                String fileID = request.substring(76,80) ;
-                String offset = request.substring(80,84) ;
+                String offset = request.substring(2,6) ;
+                String fileID = request.substring(6,10) ;
+                String oldChecksum = request.substring(10,84) ;
                 String filename = request.substring(84, request.length()) ;
 
-                filename = convertBinaryStringToString(filename);
+                int charCode = Integer.parseInt(filename, 2);
+                filename = new Character((char)charCode).toString();
+
                 FileReader fr = new FileReader(filename);
                 BufferedReader br1 = new BufferedReader(fr);
                 
                 int c;
-                char var;
-                int count =0;
-                String returnMessage = "";
-                boolean read = false;
                 while((c = br1.read()) != -1){
-
-                	var = (char)c;
                 	
-                	if(count == Integer.parseInt(offset))
-                		read = true;
-                	
-                	if(count == (Integer.parseInt(offset) + 512)){
-                		read = false;
-                		returnMessage += var;
-                		break;
-                	}
-                	
-                	if(read)
-                		returnMessage += var;
-                	count++;
                 }
                 
+                //Sending the response back to the client.
                 OutputStream os = socket.getOutputStream();
                 OutputStreamWriter osw = new OutputStreamWriter(os);
                 BufferedWriter bw = new BufferedWriter(osw);
 
+                String returnMessage;
                 try
                 {
-                    bw.write(returnMessage + "\n");
+                	returnMessage="test\n";
+                    bw.write(returnMessage);
                     System.out.println("Message sent to the client is "+returnMessage);
+                    bw.flush();
+                	returnMessage="test\n";
+                    bw.write(returnMessage);
+                    System.out.println("Message sent to the client is "+returnMessage);
+                    bw.flush();
+                	returnMessage="test\n";
+                    bw.write(returnMessage);
+                    System.out.println("Message sent to the client is "+returnMessage);
+                    bw.flush();
                 }
-                catch(Exception e){}
+                catch(NumberFormatException e)
+                {
+                    //Input was not a number. Sending proper message back to client.
+                    returnMessage = "Please send a proper number\n";
+                }
+
 
             }
         }
@@ -93,24 +95,5 @@ public class Server
             }
             catch(Exception e){}
         }
-    }
-    
-    public static String convertBinaryStringToString(String string){
-        StringBuilder sb = new StringBuilder();
-        char[] chars = string.replaceAll("\\s", "").toCharArray();
-        int [] mapping = {1,2,4,8,16,32,64,128};
-
-        for (int j = 0; j < chars.length; j+=8) {
-            int idx = 0;
-            int sum = 0;
-            for (int i = 7; i>= 0; i--) {
-                if (chars[i+j] == '1') {
-                    sum += mapping[idx];
-                }
-                idx++;
-            }
-            sb.append(Character.toChars(sum));
-        }
-        return sb.toString();
     }
 }
