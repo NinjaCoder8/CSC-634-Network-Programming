@@ -1,48 +1,92 @@
-import java.net.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
 
-public class Server {
+public class Server
+{
 
- static ServerSocket socket1;
- protected final static int port = 19999;
- static Socket connection;
+    private static Socket socket;
 
- static boolean first;
- static StringBuffer process;
- static String TimeStamp;
- 
- public static void main(String[] args) {
-	    try{
-	      socket1 = new ServerSocket(port);
-	      System.out.println("SingleSocketServer Initialized");
-	      int character;
-	      while (true) {
-	          connection = socket1.accept();
+    public static void main(String[] args)
+    {
+        try
+        {
 
-	          BufferedInputStream is = new BufferedInputStream(connection.getInputStream());
-	          InputStreamReader isr = new InputStreamReader(is);
-	          process = new StringBuffer();
-	          
-	          while((character = isr.read()) != 13) {
-	            process.append((char)character);
-	          }
-	          
-	         String capitalized = process.toString();
-	         capitalized = capitalized.toUpperCase() + (char) 13;
-	         
-	          TimeStamp = new java.util.Date().toString();
-	          String returnCode = "SingleSocketServer responded at "+ TimeStamp + (char) 13;
-	          System.out.println(returnCode);
-	          BufferedOutputStream os = new BufferedOutputStream(connection.getOutputStream());
-	          OutputStreamWriter osw = new OutputStreamWriter(os, "US-ASCII");
-	          osw.write(capitalized);
-	          osw.flush();
-	       }
-	      }
-	      catch (IOException e) {}
-	        try {
-	          connection.close();
-	        }
-	        catch (IOException e) {}
-	    }
-	  }
+            int port = 19999;
+            ServerSocket serverSocket = new ServerSocket(port);
+            System.out.println("Server Started and listening to the port 19999");
+
+            //Server is running always. This is done using this while(true) loop
+            while(true)
+            {
+            	System.out.println("hehe");
+                //Reading the message from the client
+                socket = serverSocket.accept();
+                InputStream is = socket.getInputStream();
+                InputStreamReader isr = new InputStreamReader(is);
+                BufferedReader br = new BufferedReader(isr);
+                String request = br.readLine();
+                System.out.println("Message received from client is "+request);
+
+
+                String version = request.charAt(0) + "";
+                String opcode = request.charAt(1) + "";
+                String offset = request.substring(2,6) ;
+                String fileID = request.substring(6,10) ;
+                String oldChecksum = request.substring(10,84) ;
+                String filename = request.substring(84, request.length()) ;
+
+                int charCode = Integer.parseInt(filename, 2);
+                String str = new Character((char)charCode).toString();
+
+                
+                
+                //Sending the response back to the client.
+                OutputStream os = socket.getOutputStream();
+                OutputStreamWriter osw = new OutputStreamWriter(os);
+                BufferedWriter bw = new BufferedWriter(osw);
+
+                String returnMessage;
+                try
+                {
+                	returnMessage="test\n";
+                    bw.write(returnMessage);
+                    System.out.println("Message sent to the client is "+returnMessage);
+                    bw.flush();
+                	returnMessage="test\n";
+                    bw.write(returnMessage);
+                    System.out.println("Message sent to the client is "+returnMessage);
+                    bw.flush();
+                	returnMessage="test\n";
+                    bw.write(returnMessage);
+                    System.out.println("Message sent to the client is "+returnMessage);
+                    bw.flush();
+                }
+                catch(NumberFormatException e)
+                {
+                    //Input was not a number. Sending proper message back to client.
+                    returnMessage = "Please send a proper number\n";
+                }
+
+
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        finally
+        {
+            try
+            {
+                socket.close();
+            }
+            catch(Exception e){}
+        }
+    }
+}

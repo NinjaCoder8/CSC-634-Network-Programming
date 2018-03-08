@@ -1,54 +1,99 @@
-import java.net.*;
-import java.util.Scanner;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
 
-public class Client {
+public class Client
+{
 
-	
-	public static void main(String[] args) {
-		Scanner scan = new Scanner(System.in);
-		System.out.println("Please enter the host server");
-		String host = scan.next();
-	    host = "localhost";
-		System.out.println("Please define the port");
-		int port = scan.nextInt();
-	    port = 19999;
+    private static Socket socket;
 
-	    StringBuffer instr = new StringBuffer();
-	    String TimeStamp;
-	    System.out.println("SocketClient Initilizing...");
+    public static void main(String args[])
+    {
+        try
+        {
+            String host = "localhost";
+            int port = 19999;
+            InetAddress address = InetAddress.getByName(host);
+            socket = new Socket(address, port);
 
-	    try {
-	    		InetAddress address = InetAddress.getByName(host);
-	    		
-	    		Socket connection = new Socket(address, port);
-	    		BufferedOutputStream bos = new BufferedOutputStream(connection.getOutputStream());
+            OutputStream os = socket.getOutputStream();
+            OutputStreamWriter osw = new OutputStreamWriter(os);
+            BufferedWriter bw = new BufferedWriter(osw);
+            String version = "1";
+            String opcode = "1";
+            String offset = "0000";
+            String fileID = "1100";
+            String filename = toBinary("file.txt");
+            String checksum = complement(version+opcode+offset+fileID+filename);
 
-	    		OutputStreamWriter osw = new OutputStreamWriter(bos, "US-ASCII");
-	    		TimeStamp = new java.util.Date().toString();
-	    		String process = "Calling the Socket Server on "+ host + " port " + port +
-	    				" at " + TimeStamp +  (char) 13;
-	    		
-	    		String texttoCapitalize = "this is a text! Capitalize it for me please" + (char) 13;
-	          
-	    		osw.write(texttoCapitalize);
-	    		osw.flush();
-	        
-	    		BufferedInputStream bis = new BufferedInputStream(connection.getInputStream());
-	    		InputStreamReader isr = new InputStreamReader(bis, "US-ASCII");
+            
+            String request = version + opcode + checksum + fileID + offset + filename;
+            
 
-	          int c;
-	          while ( (c = isr.read()) != 13)
-	            instr.append( (char) c);
+            String sendMessage = request + "\n";
+            bw.write(sendMessage);
+            bw.flush();
+            System.out.println("Message sent to the server !");
 
-	          connection.close();
-	          System.out.println("Client " +instr);
-	         }
-	        catch (IOException f) {
-	          System.out.println("IOException: " + f);
-	        }
-	        catch (Exception g) {
-	          System.out.println("Exception: " + g);
-	        }
-	      }
-	    }
+            //Get the return message from the server
+            InputStream is = socket.getInputStream();
+            InputStreamReader isr = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(isr);
+            String line;
+            while ((line = br.readLine() )!= null) {    
+            System.out.println("Message received from the server : " +line);
+        }}
+        catch (Exception exception)
+        {
+            exception.printStackTrace();
+        }
+        finally
+        {
+            //Closing the socket
+            try
+            {
+                socket.close();
+            }
+            catch(Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    public static String toBinary(String s){
+    	  byte[] bytes = s.getBytes();
+    	  StringBuilder binary = new StringBuilder();
+    	  for (byte b : bytes)
+    	  {
+    	     int val = b;
+    	     for (int i = 0; i < 8; i++)
+    	     {
+    	        binary.append((val & 128) == 0 ? 0 : 1);
+    	        val <<= 1;
+    	     }
+    	  }
+    	  
+    	  return binary.toString();
+    }
+    
+    public static String complement(String s){
+    	String ans = "";
+    	System.out.println(s.length());
+    	System.exit(0);
+		for(int i=0; i< s.length(); i++){
+			if(s.charAt(i) == '0')
+				ans += "1";
+			else 
+				ans += 0;
+		}
+  	  
+  	  	return ans;
+  }
+}
