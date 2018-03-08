@@ -75,7 +75,7 @@ public class Server{
                 String new_checksum = "10101";
 
                 
-                String response = new_version + new_opcode + new_checksum + new_fileID + new_offset + new_filename;
+                String response = version + opcode + new_checksum + fileID + offset + filename;
                 
                 
                 try{

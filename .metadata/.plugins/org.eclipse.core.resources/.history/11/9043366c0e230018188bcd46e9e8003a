@@ -67,20 +67,12 @@ public class Server{
                 BufferedWriter bw = new BufferedWriter(osw);
 
                 
-                String new_version = "1";
-                String new_opcode = "1";
-                String new_offset = count + "";
-                String new_fileID = "1100";
-                String new_filename = filename;
-                String new_checksum = "10101";
-
                 
-                String response = new_version + new_opcode + new_checksum + new_fileID + new_offset + new_filename;
                 
                 
                 try{
                     bw.write(returnMessage + "\n");
-                    System.out.println("Message sent to the client is "+ response);
+                    System.out.println("Message sent to the client is "+returnMessage);
                     bw.flush();
                 }
                 catch(Exception e){}

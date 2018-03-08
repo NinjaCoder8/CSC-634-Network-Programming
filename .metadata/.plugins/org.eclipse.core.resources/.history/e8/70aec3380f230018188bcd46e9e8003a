@@ -37,6 +37,7 @@ public class Client {
             bw.flush();
             System.out.println("Message sent to the server !");
 
+            //Get the return message from the server
             InputStream is = socket.getInputStream();
             InputStreamReader isr = new InputStreamReader(is);
             BufferedReader br = new BufferedReader(isr);
@@ -49,6 +50,7 @@ public class Client {
             exception.printStackTrace();
         }
         finally{
+            //Closing the socket
             try{
                 socket.close();
             }

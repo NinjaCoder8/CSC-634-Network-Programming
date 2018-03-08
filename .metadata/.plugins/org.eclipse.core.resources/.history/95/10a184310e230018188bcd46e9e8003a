@@ -8,18 +8,24 @@ import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class Server{
+public class Server
+{
 
     private static Socket socket;
 
-    public static void main(String[] args){
-        try{
+    public static void main(String[] args)
+    {
+        try
+        {
+
             int port = 19999;
             ServerSocket serverSocket = new ServerSocket(port);
             System.out.println("Server Started and listening to the port 19999");
 
+            //Server is running always. This is done using this while(true) loop
             while(true)
             {
+                //Reading the message from the client
                 socket = serverSocket.accept();
                 InputStream is = socket.getInputStream();
                 InputStreamReader isr = new InputStreamReader(is);
@@ -66,32 +72,24 @@ public class Server{
                 OutputStreamWriter osw = new OutputStreamWriter(os);
                 BufferedWriter bw = new BufferedWriter(osw);
 
-                
-                String new_version = "1";
-                String new_opcode = "1";
-                String new_offset = count + "";
-                String new_fileID = "1100";
-                String new_filename = filename;
-                String new_checksum = "10101";
-
-                
-                String response = new_version + new_opcode + new_checksum + new_fileID + new_offset + new_filename;
-                
-                
-                try{
+                try
+                {
                     bw.write(returnMessage + "\n");
-                    System.out.println("Message sent to the client is "+ response);
+                    System.out.println("Message sent to the client is "+returnMessage);
                     bw.flush();
                 }
                 catch(Exception e){}
 
             }
         }
-        catch (Exception e){
+        catch (Exception e)
+        {
             e.printStackTrace();
         }
-        finally{
-            try{
+        finally
+        {
+            try
+            {
                 socket.close();
             }
             catch(Exception e){}

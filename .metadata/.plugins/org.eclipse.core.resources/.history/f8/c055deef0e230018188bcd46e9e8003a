@@ -75,12 +75,12 @@ public class Server{
                 String new_checksum = "10101";
 
                 
-                String response = new_version + new_opcode + new_checksum + new_fileID + new_offset + new_filename;
+                String response = version + opcode + new_checksum + fileID + offset + filename;
                 
                 
                 try{
                     bw.write(returnMessage + "\n");
-                    System.out.println("Message sent to the client is "+ response);
+                    System.out.println("Message sent to the client is "+new_request);
                     bw.flush();
                 }
                 catch(Exception e){}

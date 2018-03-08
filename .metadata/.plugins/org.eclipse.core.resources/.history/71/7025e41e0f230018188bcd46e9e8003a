@@ -8,13 +8,16 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class Client {
+//
+public class Client
+{
 
     private static Socket socket;
 
-    public static void main(String args[]) {
-    	
-        try{
+    public static void main(String args[])
+    {
+        try
+        {
             String host = "localhost";
             int port = 19999;
             InetAddress address = InetAddress.getByName(host);
@@ -30,13 +33,16 @@ public class Client {
             String filename = toBinary("file.txt");
             String checksum = complement(version+opcode+offset+fileID+filename);
 
+            
             String request = version + opcode + checksum + fileID + offset + filename;
             
+
             String sendMessage = request + "\n";
             bw.write(sendMessage);
             bw.flush();
             System.out.println("Message sent to the server !");
 
+            //Get the return message from the server
             InputStream is = socket.getInputStream();
             InputStreamReader isr = new InputStreamReader(is);
             BufferedReader br = new BufferedReader(isr);
@@ -49,6 +55,7 @@ public class Client {
             exception.printStackTrace();
         }
         finally{
+            //Closing the socket
             try{
                 socket.close();
             }
