@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -36,6 +37,7 @@ public class Server{
                 String filename = request.substring(84, request.length()) ;
 
                 filename = convertBinaryStringToString(filename);
+                int totalChars = getCharactersCount(filename);
                 FileReader fr = new FileReader(filename);
                 BufferedReader br1 = new BufferedReader(fr);
                 
@@ -67,15 +69,16 @@ public class Server{
                 BufferedWriter bw = new BufferedWriter(osw);
 
                 
-                String new_version = "1";
-                String new_opcode = "1";
+                String new_version = version;
+                String new_opcode = opcode;
                 String new_offset = count + "";
-                String new_fileID = "1100";
-                String new_filename = filename;
-                String new_checksum = "10101";
+                String new_fileID = fileID;
+                String new_checksum = oldChecksum;
+                String buffer = returnMessage;
+                String length = count + "";
+                String code = "00";
 
-                
-                String response = new_version + new_opcode + new_checksum + new_fileID + new_offset + new_filename;
+                String response = new_version + new_opcode + new_checksum + new_fileID + new_offset + code + length + buffer;
                 
                 
                 try{
@@ -115,5 +118,17 @@ public class Server{
             sb.append(Character.toChars(sum));
         }
         return sb.toString();
+    }
+    
+    public static int getCharactersCount(String fileName) throws IOException{
+        FileReader fr = new FileReader(fileName);
+        BufferedReader br1 = new BufferedReader(fr);
+    	int count = 0;
+        while(br1.read() != -1){
+        	count++;
+        }
+        br1.close();
+        fr.close();
+		return count;
     }
 }

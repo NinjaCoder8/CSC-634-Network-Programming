@@ -23,28 +23,32 @@ public class Client {
             OutputStream os = socket.getOutputStream();
             OutputStreamWriter osw = new OutputStreamWriter(os);
             BufferedWriter bw = new BufferedWriter(osw);
-            String version = "1";
-            String opcode = "1";
-            String offset = "0000";
-            String fileID = "1100";
-            String filename = toBinary("file.txt");
-            String checksum = complement(version+opcode+offset+fileID+filename);
-
-            String request = version + opcode + checksum + fileID + offset + filename;
-            
-            String sendMessage = request + "\n";
-            bw.write(sendMessage);
-            bw.flush();
-            System.out.println("Message sent to the server !");
-
-            InputStream is = socket.getInputStream();
-            InputStreamReader isr = new InputStreamReader(is);
-            BufferedReader br = new BufferedReader(isr);
-            String line;
-            
-            while ((line = br.readLine() )!= null) {    
-            	System.out.println("Message received from the server : " +line);
-            }
+            do{
+            	System.out.println("hi");
+	            String version = "1";
+	            String opcode = "1";
+	            String offset = "0000";
+	            String fileID = "1100";
+	            String filename = toBinary("file.txt");
+	            String checksum = complement(version+opcode+offset+fileID+filename);
+	
+	            String request = version + opcode + checksum + fileID + offset + filename;
+	            
+	            String sendMessage = request + "\n";
+	            bw.write(sendMessage);
+	            bw.flush();
+	            System.out.println("Message sent to the server !");
+	
+	            InputStream is = socket.getInputStream();
+	            InputStreamReader isr = new InputStreamReader(is);
+	            BufferedReader br = new BufferedReader(isr);
+	            String line;
+	            
+	            while ((line = br.readLine() )!= null) {    
+	            	System.out.println("Message received from the server : " +line);
+	            	break;
+	            }
+            }while(true);
         }catch (Exception exception){
             exception.printStackTrace();
         }
