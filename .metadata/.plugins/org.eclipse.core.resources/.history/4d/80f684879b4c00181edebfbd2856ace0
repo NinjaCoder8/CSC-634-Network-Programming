@@ -1,0 +1,9 @@
+
+public class Part1 {
+
+	public static void main(String[] args){
+		for(int i=0; i<peersTotal; i++){
+			Peer p = new Peer("localhost", (1540 + i));
+		}
+	}
+}

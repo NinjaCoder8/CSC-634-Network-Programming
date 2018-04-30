@@ -1,0 +1,12 @@
+
+public class Peer {
+
+	String ipv4Address;
+	int port; 
+	
+	public Peer(String host, int port){
+		this.ipv4Address = host;
+		this.port = port;
+	}
+	
+}

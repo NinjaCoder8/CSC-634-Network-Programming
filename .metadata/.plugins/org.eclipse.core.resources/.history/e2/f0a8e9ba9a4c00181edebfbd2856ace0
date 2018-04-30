@@ -1,0 +1,7 @@
+
+public class Peer {
+
+	String ipv4Address;
+	int port; 
+	
+}
