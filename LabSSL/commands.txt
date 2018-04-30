@@ -1,0 +1,5 @@
+keytool -genkey -alias signFiles -keystore sslstore
+
+java -jar -Djavax.net.ssl.keyStore=sslstore -Djavax.net.ssl.keyStorePassword=ssllab "Server1.jar"
+
+java -jar -Djavax.net.ssl.trustStore=sslstore -Djavax.net.ssl.trustStorePassword=ssllab "Client1.jar"
