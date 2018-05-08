@@ -1,0 +1,11 @@
+import java.io.IOException;
+import java.net.UnknownHostException;
+import java.util.Scanner;
+
+public class Part2 {
+
+	Peer[] dht;
+	public static void main(String[] args) throws UnknownHostException, IOException{
+		dht = new Peer[maxPeers];
+	}
+}

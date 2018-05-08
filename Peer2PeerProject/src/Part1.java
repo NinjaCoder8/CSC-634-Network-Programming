@@ -15,9 +15,8 @@ public class Part1 {
 		      threads[i-1] = thread;
 		      thread.start();
 		}
-		
+		Scanner scan = new Scanner(System.in);
 		while(true){
-			Scanner scan = new Scanner(System.in);
 			int id=getThreadIdByAvailability();
 			if(id == -1){
 				System.out.println("No More Available Peers");
